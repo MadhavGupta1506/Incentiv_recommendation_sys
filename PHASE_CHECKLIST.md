@@ -55,8 +55,9 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 7 - Rule-Based Baseline
 
-- [ ] Implement configurable baseline scoring.
-- [ ] Produce baseline recommendations.
+- [x] Implement configurable baseline scoring with normalized 0-100 output.
+- [x] Produce deterministic ranked baseline recommendations.
+- [x] Return per-dimension score breakdowns and human-readable reasons.
 
 ## Phase 8 - ML Ranking
 
