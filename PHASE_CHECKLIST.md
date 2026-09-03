@@ -48,9 +48,10 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 6 - Feature Engineering
 
-- [ ] Add user features.
-- [ ] Add company features.
-- [ ] Add user-company relationship features.
+- [x] Add user profile features from the updated preference schema and interaction history.
+- [x] Add company metadata features.
+- [x] Add user-company relationship features.
+- [x] Keep feature generation independent from ranking weights and business rules.
 
 ## Phase 7 - Rule-Based Baseline
 
