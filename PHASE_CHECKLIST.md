@@ -115,3 +115,14 @@ Use this file to track implementation progress. Update it whenever a phase is co
 - [ ] Document local setup and run commands.
 - [x] Verify the complete demo flow.
 - [x] Commit each completed feature to GitHub.
+
+## Buyer-Seller Matching Engine
+
+- [x] Match a supply row to ranked demand rows.
+- [x] Match a demand row to ranked supply rows.
+- [x] Resolve the requesting user's own preferences only.
+- [x] Enforce active status and same-currency eligibility.
+- [x] Score sector alignment, valuation fit, deal size fit, stage fit, and price reasonableness.
+- [x] Return buyer-seller pairs with score breakdowns and reasons.
+- [x] Keep matching routes modular under `app/api/matches.py`.
+- [x] Keep automated deal creation out of scope.
