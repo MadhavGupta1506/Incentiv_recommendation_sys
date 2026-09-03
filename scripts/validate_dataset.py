@@ -50,14 +50,20 @@ DATASET_SPECS = {
         "columns": {
             "preference_id",
             "user_id",
-            "primary_sector",
-            "secondary_sector",
+            "preferred_sectors",
+            "preferred_stages",
+            "preferred_geographies",
+            "investment_min",
+            "investment_max",
             "valuation_min",
             "valuation_max",
-            "ticket_min",
-            "ticket_max",
-            "preferred_stage",
-            "geography",
+            "preferred_deal_types",
+            "min_expected_return_pct",
+            "risk_appetite",
+            "investment_horizon",
+            "company_age_min_years",
+            "company_age_max_years",
+            "esg_preference",
         },
         "min_rows": 500,
         "max_rows": 1000,
@@ -126,11 +132,20 @@ def validate_dataset(data_dir: Path = Path("Data")) -> dict[str, Any]:
     _validate_unique_ids("preferences", datasets["preferences"], "preference_id")
     _validate_unique_ids("interactions", datasets["interactions"], "interaction_id")
 
+    preferences = datasets["preferences"]
+    if preferences["user_id"].isna().any() or preferences["user_id"].duplicated().any():
+        raise ValueError("preferences.user_id must contain one unique preference per user")
+    if (preferences["investment_min"] > preferences["investment_max"]).any():
+        raise ValueError("preferences investment range is invalid")
+    if (preferences["valuation_min"] > preferences["valuation_max"]).any():
+        raise ValueError("preferences valuation range is invalid")
+    if (preferences["company_age_min_years"] > preferences["company_age_max_years"]).any():
+        raise ValueError("preferences company age range is invalid")
+
     company_ids = datasets["companies"]["company_id"]
     for name in ("supplies", "demands", "interactions"):
         _validate_references(datasets[name], "company_id", company_ids, name)
 
-    preferences = datasets["preferences"]
     interactions = datasets["interactions"]
     companies = datasets["companies"]
     behavior = (
@@ -138,12 +153,16 @@ def validate_dataset(data_dir: Path = Path("Data")) -> dict[str, Any]:
             companies[["company_id", "sector", "stage"]], on="company_id"
         )
         .merge(
-            preferences[["user_id", "primary_sector", "preferred_stage"]],
+            preferences[["user_id", "preferred_sectors", "preferred_stages"]],
             on="user_id",
         )
     )
-    behavior["sector_match"] = behavior["sector"] == behavior["primary_sector"]
-    behavior["stage_match"] = behavior["stage"] == behavior["preferred_stage"]
+    behavior["sector_match"] = behavior.apply(
+        lambda row: row["sector"] in row["preferred_sectors"].split("|"), axis=1
+    )
+    behavior["stage_match"] = behavior.apply(
+        lambda row: row["stage"] in row["preferred_stages"].split("|"), axis=1
+    )
     alignment = behavior.groupby("event_type")[["sector_match", "stage_match"]].mean()
 
     if not {"impression", "contact"}.issubset(alignment.index):

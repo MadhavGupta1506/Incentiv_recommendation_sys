@@ -26,6 +26,8 @@ Use this file to track implementation progress. Update it whenever a phase is co
 - [x] Add a Pydantic model for the supplied deals dataset.
 - [x] Validate every supplied CSV row against its application model.
 - [x] Add cross-field validation for demand and preference ranges.
+- [x] Update the preference model for multi-valued sectors, stages, geographies, and deal types.
+- [x] Add validation for investment returns, risk, horizon, company age, and ESG preferences.
 
 ## Phase 4 - Basic Data APIs
 

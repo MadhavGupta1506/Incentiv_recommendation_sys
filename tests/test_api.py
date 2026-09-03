@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from app.data.repository import repository
 from app.main import app
 
 
@@ -52,3 +53,12 @@ def test_detail_routes_return_404_for_unknown_ids(
 
     assert response.status_code == 404
     assert "not found" in response.json()["detail"]
+
+
+def test_repository_can_resolve_updated_preference_by_user() -> None:
+    preference = repository.get_preference_for_user(1)
+
+    assert preference is not None
+    assert preference.user_id == 1
+    assert preference.preferred_sectors == ["E-commerce", "HealthTech"]
+    assert preference.preferred_stages == ["Series B", "Pre-Seed"]

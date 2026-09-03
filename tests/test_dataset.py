@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pandas as pd
+
 from scripts.validate_dataset import validate_dataset
 
 
@@ -18,6 +20,14 @@ def test_supplied_dataset_matches_phase_two_requirements() -> None:
     }
     assert profile["unique_users"] == 500
     assert profile["active_companies"] == 188
+
+
+def test_preferences_define_one_profile_per_user_with_multiple_choices() -> None:
+    preferences = pd.read_csv(PROJECT_ROOT / "Data" / "preferences.csv")
+
+    assert preferences["user_id"].is_unique
+    assert preferences["preferred_sectors"].str.contains("\\|").any()
+    assert preferences["preferred_stages"].str.contains("\\|").any()
 
 
 def test_interactions_contain_preference_signal() -> None:

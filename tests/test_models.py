@@ -37,9 +37,9 @@ def test_demand_rejects_reversed_amount_range() -> None:
         Demand.model_validate(row)
 
 
-def test_preference_rejects_reversed_ticket_range() -> None:
+def test_preference_rejects_reversed_investment_range() -> None:
     row = _records("preferences")[0]
-    row["ticket_min"] = row["ticket_max"] + 1
+    row["investment_min"] = row["investment_max"] + 1
 
-    with pytest.raises(ValidationError, match="ticket_min"):
+    with pytest.raises(ValidationError, match="investment_min"):
         Preference.model_validate(row)

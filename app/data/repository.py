@@ -19,6 +19,9 @@ class DataRepository:
         self.supplies = self._load("supplies.csv", Supply, data_dir)
         self.demands = self._load("demands.csv", Demand, data_dir)
         self.preferences = self._load("preferences.csv", Preference, data_dir)
+        self.preferences_by_user = {
+            preference.user_id: preference for preference in self.preferences
+        }
 
     @staticmethod
     def _load(
@@ -56,6 +59,9 @@ class DataRepository:
             (item for item in self.preferences if item.preference_id == preference_id),
             None,
         )
+
+    def get_preference_for_user(self, user_id: int) -> Preference | None:
+        return self.preferences_by_user.get(user_id)
 
 
 repository = DataRepository()

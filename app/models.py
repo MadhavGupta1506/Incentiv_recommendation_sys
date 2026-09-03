@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, BeforeValidator, Field, model_validator
 
 
 Sector = Literal[
@@ -16,6 +16,9 @@ Sector = Literal[
 ]
 Stage = Literal["Pre-Seed", "Seed", "Series A", "Series B", "Series C"]
 Geography = Literal["India", "USA", "UK", "Singapore", "UAE"]
+DealType = Literal["Primary Equity", "Secondary", "Convertible", "Debt"]
+RiskAppetite = Literal["Low", "Medium", "High"]
+InvestmentHorizon = Literal["<2 years", "2-5 years", "5-8 years", "8+ years"]
 CompanyStatus = Literal["active", "inactive", "closed"]
 OpportunityStatus = Literal["active", "closed"]
 EventType = Literal[
@@ -27,6 +30,18 @@ EventType = Literal[
     "contact",
 ]
 DealStatus = Literal["completed", "cancelled"]
+
+
+def _split_csv_values(value: str | list[str]) -> list[str]:
+    if isinstance(value, str):
+        return [item.strip() for item in value.split("|") if item.strip()]
+    return value
+
+
+SectorList = Annotated[list[Sector], BeforeValidator(_split_csv_values)]
+StageList = Annotated[list[Stage], BeforeValidator(_split_csv_values)]
+GeographyList = Annotated[list[Geography], BeforeValidator(_split_csv_values)]
+DealTypeList = Annotated[list[DealType], BeforeValidator(_split_csv_values)]
 
 
 class Company(BaseModel):
@@ -70,21 +85,31 @@ class Demand(BaseModel):
 class Preference(BaseModel):
     preference_id: int = Field(gt=0)
     user_id: int = Field(gt=0)
-    primary_sector: Sector
-    secondary_sector: Sector
+    preferred_sectors: SectorList = Field(min_length=1)
+    preferred_stages: StageList = Field(min_length=1)
+    preferred_geographies: GeographyList = Field(min_length=1)
+    investment_min: float = Field(ge=0)
+    investment_max: float = Field(ge=0)
     valuation_min: float = Field(ge=0)
     valuation_max: float = Field(ge=0)
-    ticket_min: float = Field(ge=0)
-    ticket_max: float = Field(ge=0)
-    preferred_stage: Stage
-    geography: Geography
+    preferred_deal_types: DealTypeList = Field(min_length=1)
+    min_expected_return_pct: float = Field(ge=0, le=100)
+    risk_appetite: RiskAppetite
+    investment_horizon: InvestmentHorizon
+    company_age_min_years: int = Field(ge=0)
+    company_age_max_years: int = Field(ge=0)
+    esg_preference: bool
 
     @model_validator(mode="after")
     def validate_preference_ranges(self) -> "Preference":
         if self.valuation_min > self.valuation_max:
             raise ValueError("valuation_min cannot exceed valuation_max")
-        if self.ticket_min > self.ticket_max:
-            raise ValueError("ticket_min cannot exceed ticket_max")
+        if self.investment_min > self.investment_max:
+            raise ValueError("investment_min cannot exceed investment_max")
+        if self.company_age_min_years > self.company_age_max_years:
+            raise ValueError(
+                "company_age_min_years cannot exceed company_age_max_years"
+            )
         return self
 
 
