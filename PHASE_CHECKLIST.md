@@ -61,9 +61,10 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 8 - ML Ranking
 
-- [ ] Add configurable interaction labels.
-- [ ] Implement LightGBM learning-to-rank.
-- [ ] Rank candidate companies with the trained model.
+- [x] Add configurable interaction labels.
+- [x] Implement LightGBM learning-to-rank with grouped training data.
+- [x] Save and load trained LightGBM models.
+- [x] Rank candidate companies with the trained model.
 
 ## Phase 9 - Training Dataset
 
