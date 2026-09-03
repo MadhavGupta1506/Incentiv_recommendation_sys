@@ -3,6 +3,9 @@ from typing import AsyncGenerator
 
 from fastapi import FastAPI
 
+from app.api.routes import router
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     app.state.ready = True
@@ -13,15 +16,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         app.state.ready = False
 
 
-
-app = FastAPI(lifespan=lifespan)
-
-
 app = FastAPI(
     title="Incentiv Recommendation System",
     version="0.1.0",
     lifespan=lifespan,
 )
+app.include_router(router)
 
 
 @app.get("/health", tags=["health"])
