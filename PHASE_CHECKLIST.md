@@ -74,9 +74,10 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 10 - Model Evaluation
 
-- [ ] Calculate NDCG@5 and NDCG@10.
-- [ ] Calculate Recall@10, Precision@10, and Hit Rate@10.
-- [ ] Compare baseline and ML ranking results.
+- [x] Calculate NDCG@5 and NDCG@10.
+- [x] Calculate Recall@10, Precision@10, and Hit Rate@10.
+- [x] Compare baseline and ML ranking results.
+- [x] Aggregate metrics per user ranking group with configurable positive relevance.
 
 ## Phase 11 - Recommendation Engine
 
