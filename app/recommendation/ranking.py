@@ -102,6 +102,20 @@ class BaselineRanker:
             ),
         )
 
+    def rank_training_rows(self, training_data: object) -> list[float]:
+        """Score point-in-time feature rows for offline baseline comparison."""
+        features = training_data.features
+        weights = self.weights.as_dict()
+        history = 1.0 - (1.0 / (1.0 + features["historical_interest"] / 3.0))
+        return (
+            features["sector_match"] * weights["sector_match"]
+            + features["valuation_match"] * weights["valuation_match"]
+            + features["stage_match"] * weights["stage_match"]
+            + features["geography_match"] * weights["geography_match"]
+            + history * weights["historical_interest"]
+            + features["company_popularity_score"] * weights["popularity"]
+        ).tolist()
+
     @staticmethod
     def _build_reasons(values: dict[str, float]) -> list[str]:
         reason_by_feature = {

