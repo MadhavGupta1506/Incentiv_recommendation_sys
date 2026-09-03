@@ -4,7 +4,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from app.models import Company, Demand, Preference, Supply
+from app.models import Company, Demand, Interaction, Preference, Supply
 
 
 ModelType = TypeVar("ModelType", bound=BaseModel)
@@ -19,6 +19,7 @@ class DataRepository:
         self.supplies = self._load("supplies.csv", Supply, data_dir)
         self.demands = self._load("demands.csv", Demand, data_dir)
         self.preferences = self._load("preferences.csv", Preference, data_dir)
+        self.interactions = self._load("interactions.csv", Interaction, data_dir)
         self.preferences_by_user = {
             preference.user_id: preference for preference in self.preferences
         }
@@ -62,6 +63,9 @@ class DataRepository:
 
     def get_preference_for_user(self, user_id: int) -> Preference | None:
         return self.preferences_by_user.get(user_id)
+
+    def get_interactions_for_user(self, user_id: int) -> list[Interaction]:
+        return [interaction for interaction in self.interactions if interaction.user_id == user_id]
 
 
 repository = DataRepository()

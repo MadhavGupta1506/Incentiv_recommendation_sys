@@ -39,11 +39,11 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 5 - Candidate Generation
 
-- [ ] Add preference-based candidates.
-- [ ] Add historical-interest candidates.
-- [ ] Add popular candidates.
-- [ ] Add similar-company candidates.
-- [ ] Merge and deduplicate candidates.
+- [x] Add preference-based candidates using multi-valued preferences.
+- [x] Add historical-interest candidates weighted by interaction event.
+- [x] Add popular candidates as a deterministic fallback.
+- [x] Add similar-company candidates using company attributes.
+- [x] Merge and deduplicate active candidates.
 
 ## Phase 6 - Feature Engineering
 
