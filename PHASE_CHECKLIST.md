@@ -36,6 +36,7 @@ Use this file to track implementation progress. Update it whenever a phase is co
 - [x] Add list and detail routes for demands.
 - [x] Add list and detail routes for preferences.
 - [x] Return resource-specific 404 responses for unknown IDs.
+- [x] Keep each resource's API routes in a separate module with a shared router aggregator.
 
 ## Phase 5 - Candidate Generation
 
