@@ -68,8 +68,9 @@ Use this file to track implementation progress. Update it whenever a phase is co
 
 ## Phase 9 - Training Dataset
 
-- [ ] Generate historical user-company training examples.
-- [ ] Prevent future-interaction data leakage.
+- [x] Generate historical user-company training examples from interaction events.
+- [x] Produce LightGBM-compatible user ranking groups.
+- [x] Prevent current and future interaction data leakage with point-in-time features.
 
 ## Phase 10 - Model Evaluation
 
