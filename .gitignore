@@ -1,0 +1,8 @@
+.env
+*.md
+venv/
+*.xlsx  
+Data/
+__pycache__/
+*.py[cod]
+*.csv
