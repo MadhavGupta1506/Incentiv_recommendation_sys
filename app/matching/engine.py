@@ -34,7 +34,11 @@ class MatchingEngine:
         supply = self.repository.get_supply(supply_id)
         if supply is None:
             raise LookupError(f"Supply with id {supply_id} was not found")
+        
+        # If no company found raise this error
         company = self._company_or_error(supply.company_id)
+        
+        # If no preference found raise this
         preference = self._preference_or_error(supply.created_by)
         candidates = [
             demand
@@ -62,6 +66,7 @@ class MatchingEngine:
         matches = []
         for candidate in candidates:
             candidate_company = self._company_or_error(candidate.company_id)
+            
             score = self._score(
                 request,
                 request_company,
@@ -69,6 +74,7 @@ class MatchingEngine:
                 candidate_company,
                 preference,
             )
+            
             matches.append(
                 SupplyDemandMatch(
                     supply=request if isinstance(request, Supply) else candidate,
@@ -78,6 +84,7 @@ class MatchingEngine:
                     score=score,
                 )
             )
+            
         matches.sort(key=lambda match: (-match.score.total_score, match.demand.demand_id, match.supply.supply_id))
         return matches[: max(0, limit)]
 
@@ -86,19 +93,35 @@ class MatchingEngine:
         candidate_amount = (
             candidate.investment_amount_min + candidate.investment_amount_max
         ) / 2 if isinstance(candidate, Demand) else candidate.units_to_sell * candidate.expected_price_per_unit
-        request_amount = (
-            request.units_to_sell * request.expected_price_per_unit
-            if isinstance(request, Supply)
-            else (request.investment_amount_min + request.investment_amount_max) / 2
-        )
+        
+        # request_amount = (
+        #     request.units_to_sell * request.expected_price_per_unit
+        #     if isinstance(request, Supply)
+        #     else (request.investment_amount_min + request.investment_amount_max) / 2
+        # )
+        
+        
+        #checks if the company is in prefered sector of the user 
         company_sector_alignment = float(candidate_company.sector in preference.preferred_sectors)
+        
+        # checks if the valuation fits with the users past 
         valuation_fit = float(preference.valuation_min <= candidate_company.valuation <= preference.valuation_max)
+        
+        # checks for how mch does the deal close to users preference request
         deal_size_fit = MatchingEngine._range_closeness(candidate_amount, preference.investment_min, preference.investment_max)
+        
+        # checks for the stage of company
         stage_fit = float(candidate_company.stage in preference.preferred_stages)
+        
         price_reasonableness = 0.5
+        
         weights = (25, 20, 20, 15, 20)
+        
         values = (company_sector_alignment, valuation_fit, deal_size_fit, stage_fit, price_reasonableness)
+        
         total = round(sum(value * weight for value, weight in zip(values, weights)), 4)
+        
+        # Adds reasons to the decision
         reasons = [
             label for value, label in zip(
                 values,

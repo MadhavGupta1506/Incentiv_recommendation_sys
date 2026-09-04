@@ -8,6 +8,7 @@ engine = MatchingEngine()
 
 
 def _serialize(match: SupplyDemandMatch) -> dict[str, object]:
+
     return {
         "supply": match.supply.model_dump(),
         "demand": match.demand.model_dump(),

@@ -1,8 +1,12 @@
 .env
-*.md
+EXECUTION_PLAN.md
 venv/
 *.xlsx  
 Data/
 __pycache__/
 *.py[cod]
 *.csv
+.pytest_cache/
+*.pyc
+roadmap.md
+PHASE_CHECKLIST.md

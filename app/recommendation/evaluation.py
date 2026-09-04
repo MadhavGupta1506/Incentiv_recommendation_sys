@@ -44,7 +44,6 @@ def evaluate_ranking(
     precisions: list[float] = []
     hits: list[float] = []
     offset = 0
-
     for group_size in groups:
         group_labels = list(labels[offset : offset + group_size])
         group_scores = list(scores[offset : offset + group_size])

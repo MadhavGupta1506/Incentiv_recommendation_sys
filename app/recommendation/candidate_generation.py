@@ -39,7 +39,6 @@ class CandidateGenerator:
         if preference is not None:
             for company in self._preference_candidates(preference):
                 self._add(candidates, company, "preference")
-
         for company_id, interest in history.items():
             company = self.repository.get_company(company_id)
             if company is not None and company.status == "active":
@@ -80,6 +79,7 @@ class CandidateGenerator:
                 matches.append((score, company))
 
         matches.sort(key=lambda item: (item[0], -item[1].popularity_score, -item[1].company_id), reverse=True)
+        print(matches)
         return [company for _, company in matches]
 
     def _historical_interest(self, user_id: int) -> dict[int, float]:

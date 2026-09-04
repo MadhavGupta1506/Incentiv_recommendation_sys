@@ -1,10 +1,25 @@
 from fastapi import APIRouter, HTTPException, Query
+from pathlib import Path
 
 from app.recommendation.recommender import RecommendationEngine
+from app.recommendation.evaluation import compare_rankings
+from app.recommendation.ml_ranking import LightGBMRanker
+from app.recommendation.recommender import RecommendationEngine
+from app.recommendation.training_data import TrainingDataBuilder
+
 
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
-engine = RecommendationEngine()
+
+training_data = TrainingDataBuilder().build()
+ml_ranker = LightGBMRanker().train(
+        training_data.features,
+        training_data.labels,
+        training_data.groups,
+    )
+model_path = Path("model/ranker.txt")
+ml_ranker.save(model_path)
+engine = RecommendationEngine(ml_ranker=ml_ranker)
 
 
 @router.get("/{user_id}")
